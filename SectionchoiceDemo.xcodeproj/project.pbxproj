@@ -13,7 +13,7 @@
 		98A66D5321DE3384005CD771 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98A66D5221DE3384005CD771 /* Assets.xcassets */; };
 		98A66D5621DE3384005CD771 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98A66D5421DE3384005CD771 /* LaunchScreen.storyboard */; };
 		98A66D5921DE3384005CD771 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 98A66D5821DE3384005CD771 /* main.m */; };
-		98A66D6121DE33A8005CD771 /* SectionchoiceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 98A66D6021DE33A8005CD771 /* SectionchoiceView.m */; };
+		98A66D6421DEFFE1005CD771 /* MXSegmentMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 98A66D6321DEFFE1005CD771 /* MXSegmentMenu.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,8 +27,8 @@
 		98A66D5521DE3384005CD771 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		98A66D5721DE3384005CD771 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		98A66D5821DE3384005CD771 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		98A66D5F21DE33A8005CD771 /* SectionchoiceView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SectionchoiceView.h; sourceTree = "<group>"; };
-		98A66D6021DE33A8005CD771 /* SectionchoiceView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SectionchoiceView.m; sourceTree = "<group>"; };
+		98A66D6221DEFFE1005CD771 /* MXSegmentMenu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MXSegmentMenu.h; sourceTree = "<group>"; };
+		98A66D6321DEFFE1005CD771 /* MXSegmentMenu.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MXSegmentMenu.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,8 +65,8 @@
 				98A66D4A21DE3382005CD771 /* AppDelegate.m */,
 				98A66D4C21DE3382005CD771 /* ViewController.h */,
 				98A66D4D21DE3382005CD771 /* ViewController.m */,
-				98A66D5F21DE33A8005CD771 /* SectionchoiceView.h */,
-				98A66D6021DE33A8005CD771 /* SectionchoiceView.m */,
+				98A66D6221DEFFE1005CD771 /* MXSegmentMenu.h */,
+				98A66D6321DEFFE1005CD771 /* MXSegmentMenu.m */,
 				98A66D4F21DE3382005CD771 /* Main.storyboard */,
 				98A66D5221DE3384005CD771 /* Assets.xcassets */,
 				98A66D5421DE3384005CD771 /* LaunchScreen.storyboard */,
@@ -146,8 +146,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98A66D6421DEFFE1005CD771 /* MXSegmentMenu.m in Sources */,
 				98A66D4E21DE3382005CD771 /* ViewController.m in Sources */,
-				98A66D6121DE33A8005CD771 /* SectionchoiceView.m in Sources */,
 				98A66D5921DE3384005CD771 /* main.m in Sources */,
 				98A66D4B21DE3382005CD771 /* AppDelegate.m in Sources */,
 			);
