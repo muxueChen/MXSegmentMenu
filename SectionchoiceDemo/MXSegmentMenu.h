@@ -30,6 +30,7 @@ typedef NS_ENUM(NSUInteger, MXSegmentMenuFlagStyle) {
 - (void)loadView;
 //返回指定的Button
 - (UIButton *)itemWithIndex:(NSInteger)index;
+- (void)scrollToIndex:(NSInteger)index;
 @end
 
 @protocol MXSegmentMenuDelegate <NSObject>
