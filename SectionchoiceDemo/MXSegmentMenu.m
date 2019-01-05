@@ -7,7 +7,8 @@
 //
 
 #import "MXSegmentMenu.h"
-
+#import "MXSegmentMenuVertical.h"
+#import "MXSegmentHorizontalsMenu.h"
 #define kBaseItemTag 100
 #define kFont [UIFont systemFontOfSize:16]
 
@@ -52,10 +53,8 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
 
 @implementation MXSegmentMenu
 
-+ (void)initialize {
-    if (self == [self class]) {
-        
-    }
++ (instancetype)segmentMenuWithFrame:(CGRect)frame direction:(MXSegmentMenuDirection)direction {
+    return direction == MXSegmentMenuDirectionHorizontals ? [[MXSegmentHorizontalsMenu alloc] initWithFrame:frame] : [[MXSegmentMenuVertical alloc] initWithFrame:frame];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -70,33 +69,25 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
     }
     return self;
 }
-
 //返回指定的Button
 - (UIButton *)itemWithIndex:(NSInteger)index {
     return [self viewWithTag:kBaseItemTag + index];
 }
-
 - (void)didMoveToSuperview {
     [super didMoveToSuperview];
     [self reLoadView];
 }
-
 - (void)setFlagColor:(UIColor *)flagColor {
     _flagColor = flagColor;
     self.flagView.backgroundColor = flagColor;
 }
-
 - (UIView *)flagView {
     if (!_flagView) {
         _flagView = [[UIView alloc] init];
-        _flagView.frame = CGRectMake(0, self.frame.size.height - 4, 0, 4);
-        _flagView.backgroundColor = self.flagColor;
-        _flagView.layer.cornerRadius = 2.0;
         [self addSubview:self.flagView];
     }
     return _flagView;
 }
-
 - (void)reLoadView {
     for (UIView *view in self.subviews) {
         if (![view isEqual:self.flagView]) {
@@ -109,14 +100,10 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
         return;
     }
     self.flagView.hidden = NO;
+    [self createTitles];
 }
 
-
-- (void)animationDidStart:(CAAnimation *)anim {
-    NSLog(@"动画开始");
-}
-
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
-    NSLog(@"动画结束");
+- (void)createTitles {
+    
 }
 @end

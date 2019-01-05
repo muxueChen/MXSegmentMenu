@@ -52,6 +52,13 @@
     [self setNeedsLayout];
 }
 
+- (void)setFlagThickness:(CGFloat)flagThickness {
+    [super setFlagThickness:flagThickness];
+    CGRect frame = self.flagView.frame;
+    frame.size.height = flagThickness;
+    self.flagView.frame = frame;
+}
+
 - (void)setSelectIndex:(NSInteger)selectIndex {
     if (selectIndex >= self.numberRows) {
         return;
@@ -90,7 +97,6 @@
     groupAnimation.animations = @[positionAnimation, frameAnimation];
     groupAnimation.removedOnCompletion = NO;
     groupAnimation.fillMode = kCAFillModeForwards;
-    groupAnimation.delegate = self;
     groupAnimation.duration = 0.25;
     [self.flagView.layer addAnimation:groupAnimation forKey:nil];
 }

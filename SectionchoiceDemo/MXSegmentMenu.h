@@ -60,8 +60,8 @@ typedef NS_ENUM(NSUInteger, MXSegmentMenuDirection) {
 };
 
 @protocol MXSegmentMenuDelegate;
-
-@interface MXSegmentMenu : UIScrollView <CAAnimationDelegate>
+/** 抽象类族的顶端 */
+@interface MXSegmentMenu : UIScrollView
 //选择菜单
 @property (nonatomic, assign) NSInteger selectIndex;
 //代理对象
@@ -69,16 +69,19 @@ typedef NS_ENUM(NSUInteger, MXSegmentMenuDirection) {
 //选中标识符样式
 @property (nonatomic, assign) MXSegmentMenuFlagStyle flagStyle;
 //菜单的方向
-@property (nonatomic, assign) MXSegmentMenuDirection direction;
-//选中标识符高度
-@property (nonatomic, assign) CGFloat flagHeight;
+@property (nonatomic, assign, readonly) MXSegmentMenuDirection direction;
+//选中标识符厚度
+@property (nonatomic, assign) CGFloat flagThickness;
 //标题宽度
 @property (nonatomic, assign) CGFloat itemW;
 
++ (instancetype)segmentMenuWithFrame:(CGRect)frame direction:(MXSegmentMenuDirection)direction;
 // 刷新数据
 - (void)reLoadView;
 // 返回指定的Button
 - (UIButton *)itemWithIndex:(NSInteger)index;
+// 集成给子类实现
+- (void)createTitles;
 @end
 
 @protocol MXSegmentMenuDelegate <NSObject>

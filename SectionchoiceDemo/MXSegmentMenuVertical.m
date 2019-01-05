@@ -45,6 +45,13 @@
     return 0;
 }
 
+- (void)setFlagThickness:(CGFloat)flagThickness {
+    [super setFlagThickness:flagThickness];
+    CGRect frame = self.flagView.frame;
+    frame.size.width = flagThickness;
+    self.flagView.frame = frame;
+}
+
 - (void)setFlagStyle:(MXSegmentMenuFlagStyle)flagStyle {
     [super setFlagStyle:flagStyle];
     switch (self.flagStyle) {
@@ -150,7 +157,6 @@
     groupAnimation.animations = @[positionAnimation, frameAnimation];
     groupAnimation.removedOnCompletion = NO;
     groupAnimation.fillMode = kCAFillModeForwards;
-    groupAnimation.delegate = self;
     groupAnimation.duration = 0.25;
     [self.flagView.layer addAnimation:groupAnimation forKey:nil];
 }
