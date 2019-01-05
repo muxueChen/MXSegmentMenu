@@ -9,7 +9,6 @@
 #import "MXSegmentMenuVertical.h"
 
 @interface MXSegmentMenuVertical ()
-@property (nonatomic, strong) UIView *flagView;
 @property (nonatomic, strong) UIButton *selectedView;
 @property (nonatomic, readonly) CGFloat flagViewWidth;
 @property (nonatomic, readonly) CGFloat flagViewHeight;

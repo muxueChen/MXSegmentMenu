@@ -33,8 +33,6 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
 
 
 @interface MXSegmentMenu () 
-
-@property (nonatomic, strong) UIView *flagView;
 @property (nonatomic, strong) UIButton *selectedView;
 @property (nonatomic, readonly) CGFloat flagViewWidth;
 @property (nonatomic, assign) NSInteger numberRows;
@@ -84,6 +82,7 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
 - (UIView *)flagView {
     if (!_flagView) {
         _flagView = [[UIView alloc] init];
+        _flagView.backgroundColor = UIColor.blackColor;
         [self addSubview:self.flagView];
     }
     return _flagView;

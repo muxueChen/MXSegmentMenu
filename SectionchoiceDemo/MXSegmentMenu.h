@@ -72,6 +72,8 @@ typedef NS_ENUM(NSUInteger, MXSegmentMenuDirection) {
 @property (nonatomic, assign, readonly) MXSegmentMenuDirection direction;
 //选中标识符厚度
 @property (nonatomic, assign) CGFloat flagThickness;
+//
+@property (nonatomic, strong) UIView *flagView;
 //标题宽度
 @property (nonatomic, assign) CGFloat itemW;
 
