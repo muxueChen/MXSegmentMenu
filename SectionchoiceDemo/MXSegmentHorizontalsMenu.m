@@ -68,9 +68,10 @@
     }
     
     [super setSelectIndex:selectIndex];
-    self.selectedView.selected = NO;
+    self.selectedView.backgroundColor = self.normalBackgroundColor;
     self.selectedView = (UIButton *)[self viewWithTag:selectIndex + kBaseItemTag];
     self.selectedView.selected = YES;
+    self.selectedView.backgroundColor = self.selectedBackgroundColor;
     //滑动父视图
     CGFloat offsetX = MAX(self.selectedView.center.x - self.frame.size.width * 0.5, 0);
     CGFloat maxOffsetX = MAX(self.contentSize.width - self.frame.size.width, 0);

@@ -47,14 +47,16 @@
     
     
     //水平方向
-    MXSegmentMenu *sectionchoiceView4 = [MXSegmentMenu segmentMenuWithFrame:CGRectMake(10, 40, 300, 50) direction:MXSegmentMenuDirectionHorizontals];
+    MXSegmentMenu *sectionchoiceView4 = [MXSegmentMenu segmentMenuWithFrame:CGRectMake(10, 40, 400, 50) direction:MXSegmentMenuDirectionHorizontals];
+    sectionchoiceView4.center = CGPointMake(self.view.center.x, sectionchoiceView4.center.y);
     sectionchoiceView4.backgroundColor = UIColor.greenColor;
     sectionchoiceView4.segmentDelegate = self;
     sectionchoiceView4.flagStyle = MXSegmentMenuFlagStyleBackground;
     sectionchoiceView4.flagView.backgroundColor = UIColor.redColor;
     [self.view addSubview:sectionchoiceView4];
     
-    MXSegmentMenu *sectionchoiceView5 = [MXSegmentMenu segmentMenuWithFrame:CGRectMake(10, 100, 300,50) direction:MXSegmentMenuDirectionHorizontals];
+    MXSegmentMenu *sectionchoiceView5 = [MXSegmentMenu segmentMenuWithFrame:CGRectMake(10, 100, 400,50) direction:MXSegmentMenuDirectionHorizontals];
+    sectionchoiceView5.center = CGPointMake(self.view.center.x, sectionchoiceView5.center.y);
     sectionchoiceView5.backgroundColor = UIColor.greenColor;
     sectionchoiceView5.segmentDelegate = self;
     sectionchoiceView5.flagStyle = MXSegmentMenuFlagStyleBottomNone;
@@ -62,7 +64,8 @@
     sectionchoiceView5.selectedBackgroundColor = UIColor.redColor;
     [self.view addSubview:sectionchoiceView5];
     
-    MXSegmentMenu *sectionchoiceView6 = [MXSegmentMenu segmentMenuWithFrame:CGRectMake(10, 160, 300, 50) direction:MXSegmentMenuDirectionHorizontals];
+    MXSegmentMenu *sectionchoiceView6 = [MXSegmentMenu segmentMenuWithFrame:CGRectMake(10, 160, 400, 50) direction:MXSegmentMenuDirectionHorizontals];
+    sectionchoiceView6.center = CGPointMake(self.view.center.x, sectionchoiceView6.center.y);
     sectionchoiceView6.backgroundColor = UIColor.greenColor;
     sectionchoiceView6.segmentDelegate = self;
     sectionchoiceView6.flagStyle = MXSegmentMenuFlagStyleBottomLine;
@@ -86,7 +89,7 @@
     CGSize size = [text sizeWithAttributes:@{NSFontAttributeName: font}];
     return @{MXSegmentMenuAttributeTitleNormalFont: font,
              MXSegmentMenuAttributeTitleContentString: text,
-             MXSegmentMenuAttributeTitleWidth:@(size.width + 20),
+             MXSegmentMenuAttributeTitleWidth:@(size.width + 40),
              MXSegmentMenuAttributeTitleNormalColor:UIColor.grayColor,
              MXSegmentMenuAttributeTitleSelectedColor:UIColor.blackColor
              };
