@@ -71,12 +71,7 @@
 				98A66D4A21DE3382005CD771 /* AppDelegate.m */,
 				98A66D4C21DE3382005CD771 /* ViewController.h */,
 				98A66D4D21DE3382005CD771 /* ViewController.m */,
-				98A66D6221DEFFE1005CD771 /* MXSegmentMenu.h */,
-				98A66D6321DEFFE1005CD771 /* MXSegmentMenu.m */,
-				98A66D7321E0B4AC005CD771 /* MXSegmentMenuVertical.h */,
-				98A66D7421E0B4AC005CD771 /* MXSegmentMenuVertical.m */,
-				98A66D7021E0B483005CD771 /* MXSegmentHorizontalsMenu.h */,
-				98A66D7121E0B483005CD771 /* MXSegmentHorizontalsMenu.m */,
+				98A66D7621E0E603005CD771 /* MXSegmentMenu */,
 				98A66D4F21DE3382005CD771 /* Main.storyboard */,
 				98A66D5221DE3384005CD771 /* Assets.xcassets */,
 				98A66D5421DE3384005CD771 /* LaunchScreen.storyboard */,
@@ -84,6 +79,19 @@
 				98A66D5821DE3384005CD771 /* main.m */,
 			);
 			path = SectionchoiceDemo;
+			sourceTree = "<group>";
+		};
+		98A66D7621E0E603005CD771 /* MXSegmentMenu */ = {
+			isa = PBXGroup;
+			children = (
+				98A66D6221DEFFE1005CD771 /* MXSegmentMenu.h */,
+				98A66D6321DEFFE1005CD771 /* MXSegmentMenu.m */,
+				98A66D7321E0B4AC005CD771 /* MXSegmentMenuVertical.h */,
+				98A66D7421E0B4AC005CD771 /* MXSegmentMenuVertical.m */,
+				98A66D7021E0B483005CD771 /* MXSegmentHorizontalsMenu.h */,
+				98A66D7121E0B483005CD771 /* MXSegmentHorizontalsMenu.m */,
+			);
+			path = MXSegmentMenu;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
