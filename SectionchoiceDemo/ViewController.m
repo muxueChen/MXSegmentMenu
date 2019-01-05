@@ -23,33 +23,26 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-//    self.segemntMenu = [[MXSegmentMenu alloc] initWithFrame:CGRectMake(0, 40, 300, 50)];
-//    self.segemntMenu.center = CGPointMake(self.view.center.x, self.segemntMenu.center.y);
-//    self.segemntMenu.backgroundColor = UIColor.greenColor;
-//    self.segemntMenu.segmentDelegate = self;
-//    [self.view addSubview:self.segemntMenu];
-//
-//    self.sectionchoiceView = [[MXSegmentMenu alloc] initWithFrame:CGRectMake(0, 100, 300, 50)];
-//    self.sectionchoiceView.center = CGPointMake(self.view.center.x, self.sectionchoiceView.center.y);
-//    self.sectionchoiceView.backgroundColor = UIColor.greenColor;
-//    self.sectionchoiceView.segmentDelegate = self;
-//    self.sectionchoiceView.flagStyle = MXSegmentMenuFlagStyleBackground;
-//    [self.view addSubview:self.sectionchoiceView];
-//
-//    MXSegmentMenu *sectionchoiceView = [[MXSegmentMenu alloc] initWithFrame:CGRectMake(0, 160, 300, 50)];
-//    sectionchoiceView.center = CGPointMake(self.view.center.x, sectionchoiceView.center.y);
-//    sectionchoiceView.backgroundColor = UIColor.greenColor;
-//    sectionchoiceView.segmentDelegate = self;
-//
-//    sectionchoiceView.flagStyle = MXSegmentMenuFlagStyleBackground;
-//    [self.view addSubview:sectionchoiceView];
-    
-    MXSegmentMenu *sectionchoiceView1 = [MXSegmentMenu segmentMenuWithFrame:CGRectMake(0, 220, 100, ScreenHeight - 300) direction:MXSegmentMenuDirectionVertical];
-    sectionchoiceView1.center = CGPointMake(self.view.center.x, sectionchoiceView1.center.y);
+    MXSegmentMenu *sectionchoiceView1 = [MXSegmentMenu segmentMenuWithFrame:CGRectMake(10, 220, 100, ScreenHeight - 300) direction:MXSegmentMenuDirectionVertical];
     sectionchoiceView1.backgroundColor = UIColor.greenColor;
     sectionchoiceView1.segmentDelegate = self;
     sectionchoiceView1.flagStyle = MXSegmentMenuFlagStyleBackground;
+    sectionchoiceView1.flagView.backgroundColor = UIColor.redColor;
     [self.view addSubview:sectionchoiceView1];
+    
+    MXSegmentMenu *sectionchoiceView2 = [MXSegmentMenu segmentMenuWithFrame:CGRectMake(120, 220, 100, ScreenHeight - 300) direction:MXSegmentMenuDirectionVertical];
+    sectionchoiceView2.backgroundColor = UIColor.greenColor;
+    sectionchoiceView2.segmentDelegate = self;
+    sectionchoiceView2.flagStyle = MXSegmentMenuFlagStyleBottomNone;
+    sectionchoiceView2.normalBackgroundColor = UIColor.greenColor;
+    sectionchoiceView2.selectedBackgroundColor = UIColor.redColor;
+    [self.view addSubview:sectionchoiceView2];
+    
+    MXSegmentMenu *sectionchoiceView3 = [MXSegmentMenu segmentMenuWithFrame:CGRectMake(230, 220, 100, ScreenHeight - 300) direction:MXSegmentMenuDirectionVertical];
+    sectionchoiceView3.backgroundColor = UIColor.greenColor;
+    sectionchoiceView3.segmentDelegate = self;
+    sectionchoiceView3.flagStyle = MXSegmentMenuFlagStyleBottomLine;
+    [self.view addSubview:sectionchoiceView3];
 }
 
 - (NSArray *)topMenuTitles {
@@ -69,6 +62,9 @@
     CGSize size = [text sizeWithAttributes:@{NSFontAttributeName: font}];
     return @{MXSegmentMenuAttributeTitleNormalFont: font,
              MXSegmentMenuAttributeTitleContentString: text,
-             MXSegmentMenuAttributeTitleWidth:@(size.width + 20)};
+             MXSegmentMenuAttributeTitleWidth:@(size.width + 20),
+             MXSegmentMenuAttributeTitleNormalColor:UIColor.grayColor,
+             MXSegmentMenuAttributeTitleSelectedColor:UIColor.blackColor
+             };
 }
 @end

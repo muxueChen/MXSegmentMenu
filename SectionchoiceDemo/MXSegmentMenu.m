@@ -31,7 +31,6 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeSelectContentImage      = @"MXSe
 /** 文本内容 */
 MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSegmentMenuAttributeTitleContentString";
 
-
 @interface MXSegmentMenu () 
 @property (nonatomic, strong) UIButton *selectedView;
 @property (nonatomic, readonly) CGFloat flagViewWidth;

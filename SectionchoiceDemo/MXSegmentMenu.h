@@ -76,6 +76,10 @@ typedef NS_ENUM(NSUInteger, MXSegmentMenuDirection) {
 @property (nonatomic, strong) UIView *flagView;
 //标题宽度
 @property (nonatomic, assign) CGFloat itemW;
+//
+@property (nonatomic, strong) UIColor *selectedBackgroundColor;
+//
+@property (nonatomic, strong) UIColor *normalBackgroundColor;
 
 + (instancetype)segmentMenuWithFrame:(CGRect)frame direction:(MXSegmentMenuDirection)direction;
 // 刷新数据

@@ -80,6 +80,9 @@
     CGFloat normalH = self.frame.size.height/self.numberRows;
     CGFloat Y = 0;
     CGFloat X = 0;
+    if (self.flagStyle == MXSegmentMenuFlagStyleBottomLine) {
+        X = CGRectGetMaxX(self.flagView.frame);
+    }
     for (NSInteger i = 0; i < self.numberRows; i++) {
         
         UIButton *item = [[UIButton alloc] init];
@@ -170,9 +173,10 @@
     
     [super setSelectIndex:selectIndex];
     self.selectedView.selected = NO;
+    self.selectedView.backgroundColor = self.normalBackgroundColor;
     self.selectedView = (UIButton *)[self viewWithTag:selectIndex + kBaseItemTag];
     self.selectedView.selected = YES;
-    
+    self.selectedView.backgroundColor = self.selectedBackgroundColor;
     CGFloat offsetY = MAX(self.selectedView.center.y - self.frame.size.height * 0.5, 0);
     CGFloat maxOffsetY = MAX(self.contentSize.height - self.frame.size.height, 0);
     [self setContentOffset:CGPointMake(0, MIN(offsetY, maxOffsetY)) animated:YES];
