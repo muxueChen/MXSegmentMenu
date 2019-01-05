@@ -167,16 +167,10 @@
     self.selectedView.selected = NO;
     self.selectedView = (UIButton *)[self viewWithTag:selectIndex + kBaseItemTag];
     self.selectedView.selected = YES;
-    //滑动父视图
-    if (self.direction == MXSegmentMenuDirectionHorizontals) {
-        CGFloat offsetX = MAX(self.selectedView.center.x - self.frame.size.width * 0.5, 0);
-        CGFloat maxOffsetX = MAX(self.contentSize.width - self.frame.size.width, 0);
-        [self setContentOffset:CGPointMake(MIN(offsetX, maxOffsetX), 0) animated:YES];
-    } else {
-        CGFloat offsetY = MAX(self.selectedView.center.y - self.frame.size.height * 0.5, 0);
-        CGFloat maxOffsetY = MAX(self.contentSize.height - self.frame.size.height, 0);
-        [self setContentOffset:CGPointMake(0, MIN(offsetY, maxOffsetY)) animated:YES];
-    }
+    
+    CGFloat offsetY = MAX(self.selectedView.center.y - self.frame.size.height * 0.5, 0);
+    CGFloat maxOffsetY = MAX(self.contentSize.height - self.frame.size.height, 0);
+    [self setContentOffset:CGPointMake(0, MIN(offsetY, maxOffsetY)) animated:YES];
     //移动滑动标示
     [self moveFlagView];
     
