@@ -12,10 +12,10 @@
 #define kFont [UIFont systemFontOfSize:16]
 
 @interface MXSegmentMenu () <CAAnimationDelegate>
-@property (nonatomic, strong) NSArray <NSString *>*titleSources;
 @property (nonatomic, strong) UIView *flagView;
 @property (nonatomic, strong) UIButton *selectedView;
 @property (nonatomic, readonly) CGFloat flagViewWidth;
+@property (nonatomic, assign) NSInteger numberRows;
 @end
 
 @implementation MXSegmentMenu
@@ -27,6 +27,8 @@
         _titleSelectedColor = UIColor.whiteColor;
         _titleNormaColor = UIColor.whiteColor;
         _selectIndex = 0;
+        _titleNormaFont = [UIFont systemFontOfSize:14];
+        _titleSelectedFont = [UIFont systemFontOfSize:14];
     }
     return self;
 }
@@ -68,7 +70,6 @@
         case MXSegmentMenuFlagStyleBottomCustom:
             [self.flagView removeFromSuperview];
             self.flagView = nil;
-//            if ([self.delegate respondsToSelector:<#(SEL)#>])
             break;
         default:
             break;
@@ -84,19 +85,25 @@
 
 - (void)didMoveToSuperview {
     [super didMoveToSuperview];
-    [self loadView];
+    [self reLoadView];
 }
 
 - (void)setSelectIndex:(NSInteger)selectIndex {
-    if (selectIndex >= self.titleSources.count) {
+    if (selectIndex >= self.numberRows) {
         return;
     }
+    if ([self.segmentDelegate respondsToSelector:@selector(segmentMenu:deSelectedIndex:)]) {
+        [self.segmentDelegate segmentMenu:self deSelectedIndex:self.selectedView.tag - kBaseItemTag];
+    }
+    
     _selectIndex = selectIndex;
     self.selectedView.selected = NO;
     self.selectedView = (UIButton *)[self viewWithTag:selectIndex + kBaseItemTag];
     self.selectedView.selected = YES;
     [self moveFlagView];
-    [self.delegate segmentMenu:self didSelectedIndex:self.selectedView.tag - kBaseItemTag];
+    if ([self.segmentDelegate respondsToSelector:@selector(segmentMenu:didSelectedIndex:)]) {
+        [self.segmentDelegate segmentMenu:self didSelectedIndex:self.selectedView.tag - kBaseItemTag];
+    }
 }
 
 - (void)setTitleNormaColor:(UIColor *)titleNormaColor {
@@ -132,33 +139,54 @@
     return _flagView;
 }
 
-- (void)loadView {
-    self.titleSources = [self.delegate dataSourceSegmentMenu:self];
+- (void)reLoadView {
     for (UIView *view in self.subviews) {
         if (![view isEqual:self.flagView]) {
             [view removeFromSuperview];
         }
     }
-    if (self.titleSources.count <= 0) {
-        self.hidden = YES;
+    self.numberRows = [self.segmentDelegate numberRowsWithsegmentMenu:self];
+    if (self.numberRows <= 0) {
+        self.flagView.hidden = YES;
         return;
     }
-    self.hidden = NO;
+    self.flagView.hidden = NO;
     [self createTitles];
 }
 
 - (void)createTitles {
-    CGFloat itemW = self.frame.size.width/self.titleSources.count;
+    CGFloat normalW = self.frame.size.width/self.numberRows;
     CGFloat itemH = self.frame.size.height;
     CGFloat Y = 0;
     CGFloat X = 0;
-    for (NSInteger i = 0; i < self.titleSources.count; i++) {
-        UIButton *item = [[UIButton alloc] initWithFrame:CGRectMake(X, Y, itemW, itemH)];
+    for (NSInteger i = 0; i < self.numberRows; i++) {
+        CGFloat W = normalW;
+        if ([self.segmentDelegate respondsToSelector:@selector(itemWidthWithSegmentMenu:itemForIndex:)]) {
+            W = [self.segmentDelegate itemWidthWithSegmentMenu:self itemForIndex:i];
+        }
+        UIButton *item = [[UIButton alloc] initWithFrame:CGRectMake(X, Y, W, itemH)];
         item.titleLabel.font = kFont;
         [item addTarget:self action:@selector(clicked:) forControlEvents:UIControlEventTouchUpInside];
-        [item setTitle:self.titleSources[i] forState:UIControlStateNormal];
-        [item setTitleColor:self.titleSelectedColor forState:UIControlStateSelected];
-        [item setTitleColor:self.titleNormaColor forState:UIControlStateNormal];
+        
+        NSString *string = [self.segmentDelegate segmentMenu:self itemForIndex:i];
+        [item setTitle:string forState:UIControlStateNormal];
+        
+        UIColor *normalColor = self.titleNormaColor;
+        if ([self.segmentDelegate respondsToSelector:@selector(titleNormaColorWithSegmentMenu:itemForIndex:)]) {
+            normalColor = [self.segmentDelegate titleNormaColorWithSegmentMenu:self itemForIndex:i];
+        }
+        UIColor *selectedColor = self.titleSelectedColor;
+        if ([self.segmentDelegate respondsToSelector:@selector(titleSelectedColorWithSegmentMenu:itemForIndex:)]) {
+            selectedColor = [self.segmentDelegate titleSelectedColorWithSegmentMenu:self itemForIndex:i];
+        }
+        [item setTitleColor:selectedColor forState:UIControlStateSelected];
+        [item setTitleColor:normalColor forState:UIControlStateNormal];
+        UIFont *font = self.titleNormaFont;
+        if ([self.segmentDelegate respondsToSelector:@selector(titleNormaFontWithSegmentMenu:itemForIndex:)]) {
+            font = [self.segmentDelegate titleNormaFontWithSegmentMenu:self itemForIndex:i];
+        }
+        item.titleLabel.font = font;
+        
         [self addSubview:item];
         item.tag = i + kBaseItemTag;
         X = CGRectGetMaxX(item.frame);
@@ -169,11 +197,23 @@
 - (void)clicked:(UIButton *)btn {
     //是否选中
     if ([self.delegate respondsToSelector:@selector(segmentMenu:shouldSelectIndex:)]) {
-        if (![self.delegate segmentMenu:self shouldSelectIndex:btn.tag - kBaseItemTag]) {
+        if (![self.segmentDelegate segmentMenu:self shouldSelectIndex:btn.tag - kBaseItemTag]) {
             return;
         }
     }
     self.selectIndex = btn.tag - kBaseItemTag;
+}
+
+- (void)layoutSubviews {
+//    [super layoutSubviews];
+//    UIView *topView = nil;
+//    for (NSInteger i = 0; i < self.numberRows; i ++) {
+//        UIView *view = [self viewWithTag:i + kBaseItemTag];
+//        if (view) {
+//            topView.frame = CGRectMake(CGRectGetMaxX(topView.frame), view.frame.origin.x, view.frame.size.width, view.frame.size.height);
+//            topView = view;
+//        }
+//    }
 }
 
 //移动到 selectView 位置处

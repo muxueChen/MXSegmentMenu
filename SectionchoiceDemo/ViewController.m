@@ -15,6 +15,7 @@
 @property (nonatomic, strong) MXSegmentMenu *sectionchoiceView;
 @property (nonatomic, strong) MXSegmentMenu *segemntMenu;
 @property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) NSArray *topMenuTitles;
 @end
 
 @implementation ViewController
@@ -27,21 +28,35 @@
     self.segemntMenu.backgroundColor = UIColor.greenColor;
     self.segemntMenu.titleSelectedColor = UIColor.redColor;
     self.segemntMenu.titleNormaColor = UIColor.grayColor;
-    self.segemntMenu.delegate = self;
+    self.segemntMenu.segmentDelegate = self;
     [self.view addSubview:self.segemntMenu];
     
     self.sectionchoiceView = [[MXSegmentMenu alloc] initWithFrame:CGRectMake(0, 100, 300, 50)];
     self.sectionchoiceView.center = CGPointMake(self.view.center.x, self.sectionchoiceView.center.y);
     self.sectionchoiceView.backgroundColor = UIColor.greenColor;
-    self.sectionchoiceView.delegate = self;
+    self.sectionchoiceView.segmentDelegate = self;
+    self.sectionchoiceView.titleSelectedColor = UIColor.redColor;
+    self.sectionchoiceView.titleNormaColor = UIColor.grayColor;
+    self.sectionchoiceView.flagStyle = MXSegmentMenuFlagStyleBackground;
+    [self.view addSubview:self.sectionchoiceView];
+    
+    self.sectionchoiceView = [[MXSegmentMenu alloc] initWithFrame:CGRectMake(0, 150, 300, 50)];
+    self.sectionchoiceView.center = CGPointMake(self.view.center.x, self.sectionchoiceView.center.y);
+    self.sectionchoiceView.backgroundColor = UIColor.greenColor;
+    self.sectionchoiceView.segmentDelegate = self;
     self.sectionchoiceView.titleSelectedColor = UIColor.redColor;
     self.sectionchoiceView.titleNormaColor = UIColor.grayColor;
     self.sectionchoiceView.flagStyle = MXSegmentMenuFlagStyleBackground;
     [self.view addSubview:self.sectionchoiceView];
 }
 
-
-#pragma mark -
+- (NSArray *)topMenuTitles {
+    if (!_topMenuTitles) {
+        _topMenuTitles = @[@"全部", @"未付款", @"交易完成", @"售后"];
+    }
+    return _topMenuTitles;
+}
+#pragma mark - MXSegmentMenuDelegate
 - (NSArray *)dataSourceSegmentMenu:(MXSegmentMenu *)sectionchoiceView {
     return @[@"全部", @"未付款", @"交易完成", @"售后"];
 }
@@ -50,8 +65,27 @@
     return YES;
 }
 
+//
 - (void)segmentMenu:(MXSegmentMenu *)sectionchoiceView didSelectedIndex:(NSInteger)index {
-//     [self.scrollView setContentOffset:CGPointMake(self.scrollView.frame.size.width * index, 0) animated:YES];
+    
+}
+
+//取消选中
+- (void)segmentMenu:(MXSegmentMenu *)segmentMenuView deSelectedIndex:(NSInteger)index {
+    
+}
+
+// 一共显示多少个 Item
+- (NSInteger)numberRowsWithsegmentMenu:(MXSegmentMenu *)segmentMenuView {
+    return self.topMenuTitles.count;
+}
+// 对应item填充的文本内容
+- (NSString *)segmentMenu:(MXSegmentMenu *)segmentMenuView itemForIndex:(NSInteger)index {
+    return self.topMenuTitles[index];
+}
+// 对应Index 的宽度
+- (CGFloat)itemWidthWithSegmentMenu:(MXSegmentMenu *)segmentMenuView itemForIndex:(NSInteger)index {
+    return segmentMenuView.frame.size.width/4;
 }
 
 
@@ -83,4 +117,6 @@
     NSInteger page = scrollView.contentOffset.x/scrollView.frame.size.width;
     self.sectionchoiceView.selectIndex = page;
 }
+
+
 @end
