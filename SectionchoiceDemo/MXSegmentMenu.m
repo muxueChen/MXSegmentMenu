@@ -31,7 +31,7 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeSelectContentImage      = @"MXSe
 MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSegmentMenuAttributeTitleContentString";
 
 
-@interface MXSegmentMenu () <CAAnimationDelegate>
+@interface MXSegmentMenu () 
 
 @property (nonatomic, strong) UIView *flagView;
 @property (nonatomic, strong) UIButton *selectedView;
@@ -58,6 +58,7 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
         
     }
 }
+
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -97,10 +98,14 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
     _flagStyle = flagStyle;
     switch (self.flagStyle) {
         case MXSegmentMenuFlagStyleBackground:
-            self.flagView.frame = CGRectMake(0, 10, 0, self.frame.size.height - 20);
+            if (self.direction == MXSegmentMenuDirectionHorizontals) {
+                self.flagView.frame = CGRectMake(0, 10, 0, self.frame.size.height - 20);
+            }
             break;
         case MXSegmentMenuFlagStyleBottomLine:
-            self.flagView.frame = CGRectMake(0, self.frame.size.height - 4, 0, 4);
+            if (self.direction == MXSegmentMenuDirectionHorizontals) {
+                self.flagView.frame = CGRectMake(0, self.frame.size.height - 4, 0, 4);
+            }
             break;
         case MXSegmentMenuFlagStyleBottomNone:
             [self.flagView removeFromSuperview];
@@ -118,6 +123,11 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
 }
 - (void)setDirection:(MXSegmentMenuDirection)direction {
     _direction = direction;
+    if (_direction == MXSegmentMenuDirectionHorizontals) {
+        self.flagView.frame = CGRectMake(0, self.frame.size.height - 4, 0, 4);
+    } else {
+        self.flagView.frame = CGRectMake(0, 0, 4, 0);
+    }
     [self reLoadView];
 }
 //返回指定的Button
@@ -143,32 +153,20 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
     self.selectedView = (UIButton *)[self viewWithTag:selectIndex + kBaseItemTag];
     self.selectedView.selected = YES;
     //滑动父视图
-    CGFloat offsetX = MAX(self.selectedView.center.x - self.frame.size.width * 0.5, 0);
-    CGFloat maxOffsetX = MAX(self.contentSize.width - self.frame.size.width, 0);
-    [self setContentOffset:CGPointMake(MIN(offsetX, maxOffsetX), 0) animated:YES];
+    if (self.direction == MXSegmentMenuDirectionHorizontals) {
+        CGFloat offsetX = MAX(self.selectedView.center.x - self.frame.size.width * 0.5, 0);
+        CGFloat maxOffsetX = MAX(self.contentSize.width - self.frame.size.width, 0);
+        [self setContentOffset:CGPointMake(MIN(offsetX, maxOffsetX), 0) animated:YES];
+    } else {
+        CGFloat offsetY = MAX(self.selectedView.center.y - self.frame.size.height * 0.5, 0);
+        CGFloat maxOffsetY = MAX(self.contentSize.height - self.frame.size.height, 0);
+        [self setContentOffset:CGPointMake(0, MIN(offsetY, maxOffsetY)) animated:YES];
+    }
     //移动滑动标示
     [self moveFlagView];
     
     if ([self.segmentDelegate respondsToSelector:@selector(segmentMenu:didSelectedIndex:)]) {
         [self.segmentDelegate segmentMenu:self didSelectedIndex:self.selectedView.tag - kBaseItemTag];
-    }
-}
-
-- (void)setTitleNormaColor:(UIColor *)titleNormaColor {
-    _titleNormaColor = titleNormaColor;
-    for (UIView *view in self.subviews) {
-        if ([view isKindOfClass:UIButton.class]) {
-            [(UIButton *)view setTitleColor:titleNormaColor forState:UIControlStateNormal];
-        }
-    }
-}
-
-- (void)setTitleSelectedColor:(UIColor *)titleSelectedColor {
-    _titleSelectedColor = titleSelectedColor;
-    for (UIView *view in self.subviews) {
-        if ([view isKindOfClass:UIButton.class]) {
-            [(UIButton *)view setTitleColor:titleSelectedColor forState:UIControlStateSelected];
-        }
     }
 }
 
@@ -179,7 +177,8 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
 
 - (UIView *)flagView {
     if (!_flagView) {
-        _flagView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - 4, 0, 4)];
+        _flagView = [[UIView alloc] init];
+        _flagView.frame = CGRectMake(0, self.frame.size.height - 4, 0, 4);
         _flagView.backgroundColor = self.flagColor;
         _flagView.layer.cornerRadius = 2.0;
         [self addSubview:self.flagView];
@@ -204,11 +203,10 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
 
 - (void)createTitles {
     if (self.direction == MXSegmentMenuDirectionHorizontals) {
-        
+        [self createHorizontalsItmes];
     } else {
-        
+        [self createVerticalItmes];
     }
-    
 }
 
 //水平方向
@@ -263,24 +261,16 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
         item.titleLabel.font = font;
         [self addSubview:item];
         item.tag = i + kBaseItemTag;
-        if (self.direction == MXSegmentMenuDirectionHorizontals) {
-            X = CGRectGetMaxX(item.frame);
-        } else {
-            Y = CGRectGetMaxY(item.frame);
-        }
+        X = CGRectGetMaxX(item.frame);
     }
-    if (self.direction == MXSegmentMenuDirectionHorizontals) {
-        self.contentSize = CGSizeMake(X, 0);
-    } else {
-        self.contentSize = CGSizeMake(0, Y);
-    }
+    self.contentSize = CGSizeMake(X, 0);
     self.selectIndex = self.selectIndex;
 }
 
 //垂直方向
 - (void)createVerticalItmes {
-    CGFloat normalW = self.frame.size.width/self.numberRows;
-    CGFloat itemH = self.frame.size.height;
+    CGFloat W = self.frame.size.width;
+    CGFloat normalH = self.frame.size.height/self.numberRows;
     CGFloat Y = 0;
     CGFloat X = 0;
     for (NSInteger i = 0; i < self.numberRows; i++) {
@@ -288,7 +278,7 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
         UIButton *item = [[UIButton alloc] init];
         [item addTarget:self action:@selector(clicked:) forControlEvents:UIControlEventTouchUpInside];
         
-        CGFloat W = normalW;
+        CGFloat itemH = normalH;
         UIColor *normalColor = self.titleNormaColor;
         UIColor *selectedColor = self.titleSelectedColor;
         UIFont *font = self.titleNormaFont;
@@ -296,7 +286,7 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
         
         MXSegmentMenuAttributes attrbutes = [self.segmentDelegate itemAttrbuteWithSegmentMenu:self itemForIndex:i];
         if (attrbutes[MXSegmentMenuAttributeTitleWidth]) {
-            W = [attrbutes[MXSegmentMenuAttributeTitleWidth] floatValue];
+            itemH = [attrbutes[MXSegmentMenuAttributeTitleWidth] floatValue];
         }
         if (attrbutes[MXSegmentMenuAttributeTitleNormalFont]) {
             font = attrbutes[MXSegmentMenuAttributeTitleNormalFont];
@@ -329,17 +319,9 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
         item.titleLabel.font = font;
         [self addSubview:item];
         item.tag = i + kBaseItemTag;
-        if (self.direction == MXSegmentMenuDirectionHorizontals) {
-            X = CGRectGetMaxX(item.frame);
-        } else {
-            Y = CGRectGetMaxY(item.frame);
-        }
+        Y = CGRectGetMaxY(item.frame);
     }
-    if (self.direction == MXSegmentMenuDirectionHorizontals) {
-        self.contentSize = CGSizeMake(X, 0);
-    } else {
-        self.contentSize = CGSizeMake(0, Y);
-    }
+    self.contentSize = CGSizeMake(0, Y);
     self.selectIndex = self.selectIndex;
 }
 
@@ -358,20 +340,32 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
     if (!self.selectedView) {
         return;
     }
+    
     if (self.direction == MXSegmentMenuDirectionHorizontals) {
-        CAAnimationGroup *groupAnimation = [CAAnimationGroup animation];
-        CABasicAnimation *positionAnimation = [CABasicAnimation animationWithKeyPath:@"position"];
-        positionAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(self.selectedView.center.x, self.flagView.center.y)];
-
-        CABasicAnimation *frameAnimation = [CABasicAnimation animationWithKeyPath:@"bounds.size.width"];
-        frameAnimation.toValue = @(self.flagViewWidth);
-        groupAnimation.animations = @[positionAnimation, frameAnimation];
-        groupAnimation.removedOnCompletion = NO;
-        groupAnimation.fillMode = kCAFillModeForwards;
-        groupAnimation.delegate = self;
-        groupAnimation.duration = 0.25;
-        [self.flagView.layer addAnimation:groupAnimation forKey:nil];
+        [self moveHorizontals];
+    } else {
+        [self moveVertical];
     }
+}
+
+//纵向移动
+- (void)moveVertical {
+   
+}
+//横向移动
+- (void)moveHorizontals {
+    CAAnimationGroup *groupAnimation = [CAAnimationGroup animation];
+    CABasicAnimation *positionAnimation = [CABasicAnimation animationWithKeyPath:@"position"];
+    positionAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(self.selectedView.center.x, self.flagView.center.y)];
+    
+    CABasicAnimation *frameAnimation = [CABasicAnimation animationWithKeyPath:@"bounds.size.width"];
+    frameAnimation.toValue = @(self.flagViewWidth);
+    groupAnimation.animations = @[positionAnimation, frameAnimation];
+    groupAnimation.removedOnCompletion = NO;
+    groupAnimation.fillMode = kCAFillModeForwards;
+    groupAnimation.delegate = self;
+    groupAnimation.duration = 0.25;
+    [self.flagView.layer addAnimation:groupAnimation forKey:nil];
 }
 
 - (void)animationDidStart:(CAAnimation *)anim {

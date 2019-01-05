@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef NSString * const MXSegmentMenuAttributeKey;
 typedef NSDictionary<MXSegmentMenuAttributeKey, id>* MXSegmentMenuAttributes;
+#define kBaseItemTag 100
 
 /** 默认状态下的标题字体 */
 UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleNormalFont;
@@ -34,7 +35,7 @@ UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeBackguroundNormalIm
 UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeBackguroundSelectedImage;
 
 /** 默认状态内容图片 */
-UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeSelectContentImage;
+UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeNormalContentImage;
 /** 选中状态内容图片 */
 UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeSelectContentImage;
 
@@ -60,7 +61,7 @@ typedef NS_ENUM(NSUInteger, MXSegmentMenuDirection) {
 
 @protocol MXSegmentMenuDelegate;
 
-@interface MXSegmentMenu : UIScrollView
+@interface MXSegmentMenu : UIScrollView <CAAnimationDelegate>
 //选择菜单
 @property (nonatomic, assign) NSInteger selectIndex;
 //代理对象
