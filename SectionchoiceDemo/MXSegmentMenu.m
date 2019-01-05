@@ -11,15 +11,53 @@
 #define kBaseItemTag 100
 #define kFont [UIFont systemFontOfSize:16]
 
+MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleNormalFont         = @"MXSegmentMenuAttributeTitleNormalFontKey";
+MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleSelectedFont       = @"MXSegmentMenuAttributeTitleSelectedFontkey";
+
+MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleWidth              = @"MXSegmentMenuAttributeTitleWidthKey";
+/** 默认状态下标题颜色 */
+MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleNormalColor        = @"MXSegmentMenuAttributeTitleNormalColor";
+/** 选中状态下的标题颜色 */
+MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleSelectedColor      = @"MXSegmentMenuAttributeTitleSelectedColor";
+/** 默认状态背景图片 */
+MXSegmentMenuAttributeKey MXSegmentMenuAttributeBackguroundNormalImage  = @"MXSegmentMenuAttributeBackguroundNormalImage";
+/** 选中状态背景图片 */
+MXSegmentMenuAttributeKey MXSegmentMenuAttributeBackguroundSelectedImage = @"MXSegmentMenuAttributeBackguroundSelectedImage";
+/** 默认状态内容图片 */
+MXSegmentMenuAttributeKey MXSegmentMenuAttributeNormalContentImage      = @"MXSegmentMenuAttributeNormalContentImage";
+/** 选中状态内容图片 */
+MXSegmentMenuAttributeKey MXSegmentMenuAttributeSelectContentImage      = @"MXSegmentMenuAttributeSelectContentImage";
+/** 文本内容 */
+MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSegmentMenuAttributeTitleContentString";
+
+
 @interface MXSegmentMenu () <CAAnimationDelegate>
+
 @property (nonatomic, strong) UIView *flagView;
 @property (nonatomic, strong) UIButton *selectedView;
 @property (nonatomic, readonly) CGFloat flagViewWidth;
 @property (nonatomic, assign) NSInteger numberRows;
+//选中标识符颜色
+@property (nonatomic, strong) UIColor *flagColor;
+
+//标题颜色
+@property (nonatomic, strong) UIColor *titleNormaColor;
+@property (nonatomic, strong) UIColor *titleSelectedColor;
+//默认状态标题字体
+@property (nonatomic, strong) UIFont *titleNormaFont;
+//选中状态字体
+@property (nonatomic, strong) UIFont *titleSelectedFont;
+//描述
+@property (nonatomic, strong) NSMutableDictionary<NSNumber *, MXSegmentMenuAttributes>*attrbutes;
 @end
 
 @implementation MXSegmentMenu
 
++ (void)initialize {
+    if (self == [self class]) {
+        
+    }
+}
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -33,6 +71,13 @@
     return self;
 }
 
+- (NSMutableDictionary<NSNumber *, MXSegmentMenuAttributes>*)attrbutesb {
+    if (!_attrbutes) {
+        _attrbutes = [NSMutableDictionary dictionary];
+    }
+    return _attrbutes;
+}
+
 - (CGFloat)flagViewWidth {
     CGSize size = [self.selectedView.currentTitle sizeWithAttributes:@{NSFontAttributeName: kFont}];
     switch (self.flagStyle) {
@@ -41,12 +86,6 @@
             break;
         case MXSegmentMenuFlagStyleBottomLine:
             return size.width;
-            break;
-        case MXSegmentMenuFlagStyleBottomNone:
-            return 0;
-            break;
-        case MXSegmentMenuFlagStyleBottomCustom:
-            return 0;
             break;
         default:
             break;
@@ -77,7 +116,10 @@
     [self moveFlagView];
     [self setNeedsLayout];
 }
-
+- (void)setDirection:(MXSegmentMenuDirection)direction {
+    _direction = direction;
+    [self reLoadView];
+}
 //返回指定的Button
 - (UIButton *)itemWithIndex:(NSInteger)index {
     return [self viewWithTag:kBaseItemTag + index];
@@ -100,7 +142,13 @@
     self.selectedView.selected = NO;
     self.selectedView = (UIButton *)[self viewWithTag:selectIndex + kBaseItemTag];
     self.selectedView.selected = YES;
+    //滑动父视图
+    CGFloat offsetX = MAX(self.selectedView.center.x - self.frame.size.width * 0.5, 0);
+    CGFloat maxOffsetX = MAX(self.contentSize.width - self.frame.size.width, 0);
+    [self setContentOffset:CGPointMake(MIN(offsetX, maxOffsetX), 0) animated:YES];
+    //移动滑动标示
     [self moveFlagView];
+    
     if ([self.segmentDelegate respondsToSelector:@selector(segmentMenu:didSelectedIndex:)]) {
         [self.segmentDelegate segmentMenu:self didSelectedIndex:self.selectedView.tag - kBaseItemTag];
     }
@@ -155,41 +203,142 @@
 }
 
 - (void)createTitles {
+    if (self.direction == MXSegmentMenuDirectionHorizontals) {
+        
+    } else {
+        
+    }
+    
+}
+
+//水平方向
+- (void)createHorizontalsItmes {
     CGFloat normalW = self.frame.size.width/self.numberRows;
     CGFloat itemH = self.frame.size.height;
     CGFloat Y = 0;
     CGFloat X = 0;
     for (NSInteger i = 0; i < self.numberRows; i++) {
-        CGFloat W = normalW;
-        if ([self.segmentDelegate respondsToSelector:@selector(itemWidthWithSegmentMenu:itemForIndex:)]) {
-            W = [self.segmentDelegate itemWidthWithSegmentMenu:self itemForIndex:i];
-        }
-        UIButton *item = [[UIButton alloc] initWithFrame:CGRectMake(X, Y, W, itemH)];
-        item.titleLabel.font = kFont;
+        
+        UIButton *item = [[UIButton alloc] init];
         [item addTarget:self action:@selector(clicked:) forControlEvents:UIControlEventTouchUpInside];
         
-        NSString *string = [self.segmentDelegate segmentMenu:self itemForIndex:i];
-        [item setTitle:string forState:UIControlStateNormal];
-        
+        CGFloat W = normalW;
         UIColor *normalColor = self.titleNormaColor;
-        if ([self.segmentDelegate respondsToSelector:@selector(titleNormaColorWithSegmentMenu:itemForIndex:)]) {
-            normalColor = [self.segmentDelegate titleNormaColorWithSegmentMenu:self itemForIndex:i];
-        }
         UIColor *selectedColor = self.titleSelectedColor;
-        if ([self.segmentDelegate respondsToSelector:@selector(titleSelectedColorWithSegmentMenu:itemForIndex:)]) {
-            selectedColor = [self.segmentDelegate titleSelectedColorWithSegmentMenu:self itemForIndex:i];
+        UIFont *font = self.titleNormaFont;
+        NSString *text = nil;
+        
+        MXSegmentMenuAttributes attrbutes = [self.segmentDelegate itemAttrbuteWithSegmentMenu:self itemForIndex:i];
+        if (attrbutes[MXSegmentMenuAttributeTitleWidth]) {
+            W = [attrbutes[MXSegmentMenuAttributeTitleWidth] floatValue];
         }
+        if (attrbutes[MXSegmentMenuAttributeTitleNormalFont]) {
+            font = attrbutes[MXSegmentMenuAttributeTitleNormalFont];
+        }
+        if (attrbutes[MXSegmentMenuAttributeTitleNormalColor]) {
+            normalColor = attrbutes[MXSegmentMenuAttributeTitleNormalColor];
+        }
+        if (attrbutes[MXSegmentMenuAttributeTitleSelectedColor]) {
+            selectedColor = attrbutes[MXSegmentMenuAttributeTitleSelectedColor];
+        }
+        if (attrbutes[MXSegmentMenuAttributeNormalContentImage]) {
+            [item setImage:attrbutes[MXSegmentMenuAttributeNormalContentImage] forState:UIControlStateNormal];
+        }
+        if (attrbutes[MXSegmentMenuAttributeSelectContentImage]) {
+            [item setImage:attrbutes[MXSegmentMenuAttributeSelectContentImage] forState:UIControlStateSelected];
+        }
+        if (attrbutes[MXSegmentMenuAttributeBackguroundNormalImage]) {
+            [item setBackgroundImage:attrbutes[MXSegmentMenuAttributeBackguroundNormalImage] forState:UIControlStateNormal];
+        }
+        if (attrbutes[MXSegmentMenuAttributeBackguroundSelectedImage]) {
+            [item setBackgroundImage: attrbutes[MXSegmentMenuAttributeBackguroundSelectedImage] forState:UIControlStateSelected];
+        }
+        if (attrbutes[MXSegmentMenuAttributeTitleContentString]) {
+            text = attrbutes[MXSegmentMenuAttributeTitleContentString];
+        }
+        item.frame = CGRectMake(X, Y, W, itemH);
+        [item setTitle:text forState:UIControlStateNormal];
         [item setTitleColor:selectedColor forState:UIControlStateSelected];
         [item setTitleColor:normalColor forState:UIControlStateNormal];
-        UIFont *font = self.titleNormaFont;
-        if ([self.segmentDelegate respondsToSelector:@selector(titleNormaFontWithSegmentMenu:itemForIndex:)]) {
-            font = [self.segmentDelegate titleNormaFontWithSegmentMenu:self itemForIndex:i];
-        }
         item.titleLabel.font = font;
-        
         [self addSubview:item];
         item.tag = i + kBaseItemTag;
-        X = CGRectGetMaxX(item.frame);
+        if (self.direction == MXSegmentMenuDirectionHorizontals) {
+            X = CGRectGetMaxX(item.frame);
+        } else {
+            Y = CGRectGetMaxY(item.frame);
+        }
+    }
+    if (self.direction == MXSegmentMenuDirectionHorizontals) {
+        self.contentSize = CGSizeMake(X, 0);
+    } else {
+        self.contentSize = CGSizeMake(0, Y);
+    }
+    self.selectIndex = self.selectIndex;
+}
+
+//垂直方向
+- (void)createVerticalItmes {
+    CGFloat normalW = self.frame.size.width/self.numberRows;
+    CGFloat itemH = self.frame.size.height;
+    CGFloat Y = 0;
+    CGFloat X = 0;
+    for (NSInteger i = 0; i < self.numberRows; i++) {
+        
+        UIButton *item = [[UIButton alloc] init];
+        [item addTarget:self action:@selector(clicked:) forControlEvents:UIControlEventTouchUpInside];
+        
+        CGFloat W = normalW;
+        UIColor *normalColor = self.titleNormaColor;
+        UIColor *selectedColor = self.titleSelectedColor;
+        UIFont *font = self.titleNormaFont;
+        NSString *text = nil;
+        
+        MXSegmentMenuAttributes attrbutes = [self.segmentDelegate itemAttrbuteWithSegmentMenu:self itemForIndex:i];
+        if (attrbutes[MXSegmentMenuAttributeTitleWidth]) {
+            W = [attrbutes[MXSegmentMenuAttributeTitleWidth] floatValue];
+        }
+        if (attrbutes[MXSegmentMenuAttributeTitleNormalFont]) {
+            font = attrbutes[MXSegmentMenuAttributeTitleNormalFont];
+        }
+        if (attrbutes[MXSegmentMenuAttributeTitleNormalColor]) {
+            normalColor = attrbutes[MXSegmentMenuAttributeTitleNormalColor];
+        }
+        if (attrbutes[MXSegmentMenuAttributeTitleSelectedColor]) {
+            selectedColor = attrbutes[MXSegmentMenuAttributeTitleSelectedColor];
+        }
+        if (attrbutes[MXSegmentMenuAttributeNormalContentImage]) {
+            [item setImage:attrbutes[MXSegmentMenuAttributeNormalContentImage] forState:UIControlStateNormal];
+        }
+        if (attrbutes[MXSegmentMenuAttributeSelectContentImage]) {
+            [item setImage:attrbutes[MXSegmentMenuAttributeSelectContentImage] forState:UIControlStateSelected];
+        }
+        if (attrbutes[MXSegmentMenuAttributeBackguroundNormalImage]) {
+            [item setBackgroundImage:attrbutes[MXSegmentMenuAttributeBackguroundNormalImage] forState:UIControlStateNormal];
+        }
+        if (attrbutes[MXSegmentMenuAttributeBackguroundSelectedImage]) {
+            [item setBackgroundImage: attrbutes[MXSegmentMenuAttributeBackguroundSelectedImage] forState:UIControlStateSelected];
+        }
+        if (attrbutes[MXSegmentMenuAttributeTitleContentString]) {
+            text = attrbutes[MXSegmentMenuAttributeTitleContentString];
+        }
+        item.frame = CGRectMake(X, Y, W, itemH);
+        [item setTitle:text forState:UIControlStateNormal];
+        [item setTitleColor:selectedColor forState:UIControlStateSelected];
+        [item setTitleColor:normalColor forState:UIControlStateNormal];
+        item.titleLabel.font = font;
+        [self addSubview:item];
+        item.tag = i + kBaseItemTag;
+        if (self.direction == MXSegmentMenuDirectionHorizontals) {
+            X = CGRectGetMaxX(item.frame);
+        } else {
+            Y = CGRectGetMaxY(item.frame);
+        }
+    }
+    if (self.direction == MXSegmentMenuDirectionHorizontals) {
+        self.contentSize = CGSizeMake(X, 0);
+    } else {
+        self.contentSize = CGSizeMake(0, Y);
     }
     self.selectIndex = self.selectIndex;
 }
@@ -204,35 +353,25 @@
     self.selectIndex = btn.tag - kBaseItemTag;
 }
 
-- (void)layoutSubviews {
-//    [super layoutSubviews];
-//    UIView *topView = nil;
-//    for (NSInteger i = 0; i < self.numberRows; i ++) {
-//        UIView *view = [self viewWithTag:i + kBaseItemTag];
-//        if (view) {
-//            topView.frame = CGRectMake(CGRectGetMaxX(topView.frame), view.frame.origin.x, view.frame.size.width, view.frame.size.height);
-//            topView = view;
-//        }
-//    }
-}
-
 //移动到 selectView 位置处
 - (void)moveFlagView {
     if (!self.selectedView) {
         return;
     }
-    CAAnimationGroup *groupAnimation = [CAAnimationGroup animation];
-    CABasicAnimation *positionAnimation = [CABasicAnimation animationWithKeyPath:@"position"];
-    positionAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(self.selectedView.center.x, self.flagView.center.y)];
-    
-    CABasicAnimation *frameAnimation = [CABasicAnimation animationWithKeyPath:@"bounds.size.width"];
-    frameAnimation.toValue = @(self.flagViewWidth);
-    groupAnimation.animations = @[positionAnimation, frameAnimation];
-    groupAnimation.removedOnCompletion = NO;
-    groupAnimation.fillMode = kCAFillModeForwards;
-    groupAnimation.delegate = self;
-    groupAnimation.duration = 0.25;
-    [self.flagView.layer addAnimation:groupAnimation forKey:nil];
+    if (self.direction == MXSegmentMenuDirectionHorizontals) {
+        CAAnimationGroup *groupAnimation = [CAAnimationGroup animation];
+        CABasicAnimation *positionAnimation = [CABasicAnimation animationWithKeyPath:@"position"];
+        positionAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(self.selectedView.center.x, self.flagView.center.y)];
+
+        CABasicAnimation *frameAnimation = [CABasicAnimation animationWithKeyPath:@"bounds.size.width"];
+        frameAnimation.toValue = @(self.flagViewWidth);
+        groupAnimation.animations = @[positionAnimation, frameAnimation];
+        groupAnimation.removedOnCompletion = NO;
+        groupAnimation.fillMode = kCAFillModeForwards;
+        groupAnimation.delegate = self;
+        groupAnimation.duration = 0.25;
+        [self.flagView.layer addAnimation:groupAnimation forKey:nil];
+    }
 }
 
 - (void)animationDidStart:(CAAnimation *)anim {

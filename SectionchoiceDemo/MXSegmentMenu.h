@@ -9,6 +9,41 @@
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+typedef NSString * const MXSegmentMenuAttributeKey;
+typedef NSDictionary<MXSegmentMenuAttributeKey, id>* MXSegmentMenuAttributes;
+
+/** 默认状态下的标题字体 */
+UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleNormalFont;
+/** 选中状态下的标题字体 */
+UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleSelectedFont;
+
+/** 默认状态下标题颜色 */
+UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleNormalColor;
+/** 选中状态下的标题颜色 */
+UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleSelectedColor;
+
+/** 默认状态下标题颜色 */
+UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleNormalColor;
+/** 选中状态下的标题颜色 */
+UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleSelectedColor;
+
+/** 默认状态背景图片 */
+UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeBackguroundNormalImage;
+/** 选中状态背景图片 */
+UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeBackguroundSelectedImage;
+
+/** 默认状态内容图片 */
+UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeSelectContentImage;
+/** 选中状态内容图片 */
+UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeSelectContentImage;
+
+/** item宽度 */
+UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleWidth;
+
+/** 文本内容 */
+UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString;
+
 //选中标志风格
 typedef NS_ENUM(NSUInteger, MXSegmentMenuFlagStyle) {
     MXSegmentMenuFlagStyleBackground,//作为背景 define
@@ -16,6 +51,13 @@ typedef NS_ENUM(NSUInteger, MXSegmentMenuFlagStyle) {
     MXSegmentMenuFlagStyleBottomNone,//无样式
     MXSegmentMenuFlagStyleBottomCustom,//自定义选中标识
 };
+
+//方向
+typedef NS_ENUM(NSUInteger, MXSegmentMenuDirection) {
+    MXSegmentMenuDirectionHorizontals,//水平
+    MXSegmentMenuDirectionVertical//垂直
+};
+
 @protocol MXSegmentMenuDelegate;
 
 @interface MXSegmentMenu : UIScrollView
@@ -25,19 +67,10 @@ typedef NS_ENUM(NSUInteger, MXSegmentMenuFlagStyle) {
 @property (nonatomic, weak) id <MXSegmentMenuDelegate> segmentDelegate;
 //选中标识符样式
 @property (nonatomic, assign) MXSegmentMenuFlagStyle flagStyle;
-//选中标识符颜色
-@property (nonatomic, strong) UIColor *flagColor;
+//菜单的方向
+@property (nonatomic, assign) MXSegmentMenuDirection direction;
 //选中标识符高度
 @property (nonatomic, assign) CGFloat flagHeight;
-
-//标题颜色
-@property (nonatomic, strong) UIColor *titleNormaColor;
-@property (nonatomic, strong) UIColor *titleSelectedColor;
-
-//标题字体
-@property (nonatomic, strong) UIFont *titleNormaFont;
-@property (nonatomic, strong) UIFont *titleSelectedFont;
-
 //标题宽度
 @property (nonatomic, assign) CGFloat itemW;
 
@@ -48,31 +81,20 @@ typedef NS_ENUM(NSUInteger, MXSegmentMenuFlagStyle) {
 @end
 
 @protocol MXSegmentMenuDelegate <NSObject>
-// 一共显示多少个 Item
+@required
+/** 一共显示多少个 Item */
 - (NSInteger)numberRowsWithsegmentMenu:(MXSegmentMenu *)segmentMenuView;
-// 对应item填充的文本内容
-- (NSString *)segmentMenu:(MXSegmentMenu *)segmentMenuView itemForIndex:(NSInteger)index;
-// 对应Index 的宽度
-- (CGFloat)itemWidthWithSegmentMenu:(MXSegmentMenu *)segmentMenuView itemForIndex:(NSInteger)index;
+/** item 属性描述 */
+- (MXSegmentMenuAttributes)itemAttrbuteWithSegmentMenu:(MXSegmentMenu *)segmentMenuView itemForIndex:(NSInteger)index;
 
-// 自定义title默认颜色
-- (UIColor *)titleNormaColorWithSegmentMenu:(MXSegmentMenu *)segmentMenuView itemForIndex:(NSInteger)index;
-// 自定义title选中颜色
-- (UIColor *)titleSelectedColorWithSegmentMenu:(MXSegmentMenu *)segmentMenuView itemForIndex:(NSInteger)index;
-
-// 自定义默认状态下字体大小
-- (UIFont *)titleSelectedFontWithSegmentMenu:(MXSegmentMenu *)segmentMenuView itemForIndex:(NSInteger)index;
-// 自定义选中状态下字体大小
-- (UIFont *)titleNormaFontWithSegmentMenu:(MXSegmentMenu *)segmentMenuView itemForIndex:(NSInteger)index;
-
-// 自定义FlagView，如果 flagStyle 选择了 MXSegmentMenuFlagStyleBottomCustom 代理必须实现这个方法，如果不实现则没有选中标识
+@optional
+/** 自定义FlagView，如果 flagStyle 选择了 MXSegmentMenuFlagStyleBottomCustom 代理必须实现这个方法，如果不实现则没有选中标识 */
 - (UIView *)customFlagViewSegmentMenu:(MXSegmentMenu *)segmentMenuView;
-
-// 将要选择第 index 个 item
+/** 将要选择第 index 个 item */
 - (BOOL)segmentMenu:(MXSegmentMenu *)segmentMenuView shouldSelectIndex:(NSInteger)index;
-// 已经选择第 index 个 item
+/** 已经选择第 index 个 item */
 - (void)segmentMenu:(MXSegmentMenu *)segmentMenuView didSelectedIndex:(NSInteger)index;
-// 取消选择第 index 个 item
+/**  取消选择第 index 个 item */
 - (void)segmentMenu:(MXSegmentMenu *)segmentMenuView deSelectedIndex:(NSInteger)index;
 @end
 NS_ASSUME_NONNULL_END
