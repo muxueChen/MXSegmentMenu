@@ -40,10 +40,16 @@
         case MXSegmentMenuFlagStyleBottomLine:
             return size.width;
             break;
+        case MXSegmentMenuFlagStyleBottomNone:
+            return 0;
+            break;
+        case MXSegmentMenuFlagStyleBottomCustom:
+            return 0;
+            break;
         default:
             break;
     }
-    return size.width;
+    return 0;
 }
 
 - (void)setFlagStyle:(MXSegmentMenuFlagStyle)flagStyle {
@@ -55,11 +61,25 @@
         case MXSegmentMenuFlagStyleBottomLine:
             self.flagView.frame = CGRectMake(0, self.frame.size.height - 4, 0, 4);
             break;
+        case MXSegmentMenuFlagStyleBottomNone:
+            [self.flagView removeFromSuperview];
+            self.flagView = nil;
+            break;
+        case MXSegmentMenuFlagStyleBottomCustom:
+            [self.flagView removeFromSuperview];
+            self.flagView = nil;
+//            if ([self.delegate respondsToSelector:<#(SEL)#>])
+            break;
         default:
             break;
     }
     [self moveFlagView];
     [self setNeedsLayout];
+}
+
+//返回指定的Button
+- (UIButton *)itemWithIndex:(NSInteger)index {
+    return [self viewWithTag:kBaseItemTag + index];
 }
 
 - (void)didMoveToSuperview {
@@ -96,10 +116,12 @@
         }
     }
 }
+
 - (void)setFlagColor:(UIColor *)flagColor {
     _flagColor = flagColor;
     self.flagView.backgroundColor = flagColor;
 }
+
 - (UIView *)flagView {
     if (!_flagView) {
         _flagView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - 4, 0, 4)];
