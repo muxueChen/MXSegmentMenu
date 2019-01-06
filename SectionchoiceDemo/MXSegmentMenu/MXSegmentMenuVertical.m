@@ -44,6 +44,10 @@
     return 0;
 }
 
+- (MXSegmentMenuDirection)direction {
+    return MXSegmentMenuDirectionVertical;
+}
+
 - (void)setFlagThickness:(CGFloat)flagThickness {
     [super setFlagThickness:flagThickness];
     CGRect frame = self.flagView.frame;

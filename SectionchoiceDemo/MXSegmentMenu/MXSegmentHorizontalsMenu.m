@@ -9,7 +9,6 @@
 #import "MXSegmentHorizontalsMenu.h"
 
 @interface MXSegmentHorizontalsMenu ()
-@property (nonatomic, strong) UIView *flagView;
 @property (nonatomic, strong) UIButton *selectedView;
 @property (nonatomic, readonly) CGFloat flagViewWidth;
 @property (nonatomic, assign) NSInteger numberRows;
@@ -66,8 +65,8 @@
     if ([self.segmentDelegate respondsToSelector:@selector(segmentMenu:deSelectedIndex:)]) {
         [self.segmentDelegate segmentMenu:self deSelectedIndex:self.selectedView.tag - kBaseItemTag];
     }
-    
     [super setSelectIndex:selectIndex];
+    self.selectedView.selected = NO;
     self.selectedView.backgroundColor = self.normalBackgroundColor;
     self.selectedView = (UIButton *)[self viewWithTag:selectIndex + kBaseItemTag];
     self.selectedView.selected = YES;
@@ -172,6 +171,10 @@
     }
     self.contentSize = CGSizeMake(X, 0);
     self.selectIndex = self.selectIndex;
+}
+
+- (MXSegmentMenuDirection)direction {
+    return MXSegmentMenuDirectionHorizontals;
 }
 
 - (void)clicked:(UIButton *)btn {
