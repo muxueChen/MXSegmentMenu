@@ -62,8 +62,6 @@
     sectionchoiceView5.backgroundColor = UIColor.greenColor;
     sectionchoiceView5.segmentDelegate = self;
     sectionchoiceView5.flagStyle = MXSegmentMenuFlagStyleBottomNone;
-//    sectionchoiceView5.normalBackgroundColor = UIColor.greenColor;
-//    sectionchoiceView5.selectedBackgroundColor = UIColor.redColor;
     [self.view addSubview:sectionchoiceView5];
     
     MXSegmentMenu *sectionchoiceView6 = [MXSegmentMenu segmentMenuWithFrame:CGRectMake(10, 160, 400, 50) direction:MXSegmentMenuDirectionHorizontals];
@@ -71,8 +69,6 @@
     sectionchoiceView6.backgroundColor = UIColor.greenColor;
     sectionchoiceView6.segmentDelegate = self;
     sectionchoiceView6.flagStyle = MXSegmentMenuFlagStyleBottomLine;
-//    sectionchoiceView6.normalBackgroundColor = UIColor.greenColor;
-//    sectionchoiceView6.selectedBackgroundColor = UIColor.redColor;
     [self.view addSubview:sectionchoiceView6];
 }
 
@@ -91,11 +87,7 @@
     NSString *text = self.topMenuTitles[index];
     UIFont *font = [UIFont systemFontOfSize:17];
     CGSize size = [text sizeWithAttributes:@{NSFontAttributeName: font}];
-    return @{MXSegmentMenuAttributeTitleNormalFont: font,
-             MXSegmentMenuAttributeTitleContentString: text,
-             MXSegmentMenuAttributeTitleWidth:@(size.width + 40),
-             MXSegmentMenuAttributeTitleNormalColor:UIColor.grayColor,
-             MXSegmentMenuAttributeTitleSelectedColor:UIColor.blackColor
-             };
+    return @{ MXSegmentMenuContentString: text,
+              MXSegmentMenuContentSize:@(100)};
 }
 @end

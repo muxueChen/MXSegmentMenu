@@ -12,39 +12,17 @@
 #define kBaseItemTag 100
 #define kFont [UIFont systemFontOfSize:16]
 
-MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleNormalFont         = @"MXSegmentMenuAttributeTitleNormalFontKey";
-MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleSelectedFont       = @"MXSegmentMenuAttributeTitleSelectedFontkey";
-
-MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleWidth              = @"MXSegmentMenuAttributeTitleWidthKey";
-/** 默认状态下标题颜色 */
-MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleNormalColor        = @"MXSegmentMenuAttributeTitleNormalColor";
-/** 选中状态下的标题颜色 */
-MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleSelectedColor      = @"MXSegmentMenuAttributeTitleSelectedColor";
-/** 默认状态背景图片 */
-MXSegmentMenuAttributeKey MXSegmentMenuAttributeBackguroundNormalImage  = @"MXSegmentMenuAttributeBackguroundNormalImage";
-/** 选中状态背景图片 */
-MXSegmentMenuAttributeKey MXSegmentMenuAttributeBackguroundSelectedImage = @"MXSegmentMenuAttributeBackguroundSelectedImage";
-/** 默认状态内容图片 */
-MXSegmentMenuAttributeKey MXSegmentMenuAttributeNormalContentImage      = @"MXSegmentMenuAttributeNormalContentImage";
 /** 选中状态内容图片 */
-MXSegmentMenuAttributeKey MXSegmentMenuAttributeSelectContentImage      = @"MXSegmentMenuAttributeSelectContentImage";
+MXSegmentMenuAttributeKey MXSegmentMenuContentImage = @"MXSegmentMenuContentImageKey";
+/** item宽度 */
+MXSegmentMenuAttributeKey MXSegmentMenuContentSize = @"MXSegmentMenuContentSizeKey";
 /** 文本内容 */
-MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSegmentMenuAttributeTitleContentString";
+MXSegmentMenuAttributeKey MXSegmentMenuContentString = @"MXSegmentMenuContentStringkey";
 
-@interface MXSegmentMenu () 
-@property (nonatomic, strong) UIButton *selectedView;
-@property (nonatomic, readonly) CGFloat flagViewWidth;
+@interface MXSegmentMenu ()
 @property (nonatomic, assign) NSInteger numberRows;
 //选中标识符颜色
 @property (nonatomic, strong) UIColor *flagColor;
-
-//标题颜色
-@property (nonatomic, strong) UIColor *titleNormaColor;
-@property (nonatomic, strong) UIColor *titleSelectedColor;
-//默认状态标题字体
-@property (nonatomic, strong) UIFont *titleNormaFont;
-//选中状态字体
-@property (nonatomic, strong) UIFont *titleSelectedFont;
 
 @end
 
@@ -58,11 +36,11 @@ MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString      = @"MXSe
     self = [super initWithFrame:frame];
     if (self) {
         _flagColor = UIColor.blackColor;
-        _titleSelectedColor = UIColor.whiteColor;
-        _titleNormaColor = UIColor.whiteColor;
+        _selectedTitleColor = UIColor.whiteColor;
+        _normalTitleColor = UIColor.whiteColor;
         _selectIndex = 0;
-        _titleNormaFont = [UIFont systemFontOfSize:14];
-        _titleSelectedFont = [UIFont systemFontOfSize:14];
+        _normalFont = [UIFont systemFontOfSize:14];
+        _selectedFont = [UIFont systemFontOfSize:14];
     }
     return self;
 }

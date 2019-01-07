@@ -13,37 +13,12 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NSString * const MXSegmentMenuAttributeKey;
 typedef NSDictionary<MXSegmentMenuAttributeKey, id>* MXSegmentMenuAttributes;
 #define kBaseItemTag 100
-
-/** 默认状态下的标题字体 */
-UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleNormalFont;
-/** 选中状态下的标题字体 */
-UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleSelectedFont;
-
-/** 默认状态下标题颜色 */
-UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleNormalColor;
-/** 选中状态下的标题颜色 */
-UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleSelectedColor;
-
-/** 默认状态下标题颜色 */
-UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleNormalColor;
-/** 选中状态下的标题颜色 */
-UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleSelectedColor;
-
-/** 默认状态背景图片 */
-UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeBackguroundNormalImage;
-/** 选中状态背景图片 */
-UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeBackguroundSelectedImage;
-
-/** 默认状态内容图片 */
-UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeNormalContentImage;
 /** 选中状态内容图片 */
-UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeSelectContentImage;
-
+UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuContentImage;
 /** item宽度 */
-UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleWidth;
-
+UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuContentSize;
 /** 文本内容 */
-UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuAttributeTitleContentString;
+UIKIT_EXTERN MXSegmentMenuAttributeKey MXSegmentMenuContentString;
 
 //选中标志风格
 typedef NS_ENUM(NSUInteger, MXSegmentMenuFlagStyle) {
@@ -64,26 +39,29 @@ typedef NS_ENUM(NSUInteger, MXSegmentMenuDirection) {
 @interface MXSegmentMenu : UIScrollView
 //选择菜单
 @property (nonatomic, assign) NSInteger selectIndex;
+@property (nonatomic, strong) UIButton *selectedView;
 //代理对象
 @property (nonatomic, weak) id <MXSegmentMenuDelegate> segmentDelegate;
 //选中标识符样式
 @property (nonatomic, assign) MXSegmentMenuFlagStyle flagStyle;
 //菜单的方向
 @property (nonatomic, assign, readonly) MXSegmentMenuDirection direction;
-//选中标识符厚度
+//选中标识符厚度 默认 4pt
 @property (nonatomic, assign) CGFloat flagThickness;
 //选中指示器
 @property (nonatomic, strong) UIView *flagView;
-//标题宽度
-@property (nonatomic, assign) CGFloat itemW;
-//选中状态下背景颜色
+//选中状态下背景颜色 默认 null
 @property (nonatomic, strong) UIColor *selectedBackgroundColor;
-//默认状态下背景颜色
+//默认状态下背景颜色 默认 null
 @property (nonatomic, strong) UIColor *normalBackgroundColor;
-//选中状态下的标题颜色
+//选中状态下的标题颜色 默认黑色
 @property (nonatomic, strong) UIColor *selectedTitleColor;
-//默认状态下的标题颜色
+//默认状态下的标题颜色 默认黑色
 @property (nonatomic, strong) UIColor *normalTitleColor;
+//默认状态下字体 默认 17号字体
+@property (nonatomic, strong) UIFont *normalFont;
+//选中状态下字体 默认17号字体
+@property (nonatomic, strong) UIFont *selectedFont;
 
 + (instancetype)segmentMenuWithFrame:(CGRect)frame direction:(MXSegmentMenuDirection)direction;
 /** 刷新数据 */

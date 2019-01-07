@@ -9,22 +9,7 @@
 #import "MXSegmentMenuVertical.h"
 
 @interface MXSegmentMenuVertical ()
-@property (nonatomic, strong) UIButton *selectedView;
-@property (nonatomic, readonly) CGFloat flagViewWidth;
-@property (nonatomic, readonly) CGFloat flagViewHeight;
 @property (nonatomic, assign) NSInteger numberRows;
-//选中标识符颜色
-@property (nonatomic, strong) UIColor *flagColor;
-
-//标题颜色
-@property (nonatomic, strong) UIColor *titleNormaColor;
-@property (nonatomic, strong) UIColor *titleSelectedColor;
-//默认状态标题字体
-@property (nonatomic, strong) UIFont *titleNormaFont;
-//选中状态字体
-@property (nonatomic, strong) UIFont *titleSelectedFont;
-//描述
-@property (nonatomic, strong) NSMutableDictionary<NSNumber *, MXSegmentMenuAttributes>*attrbutes;
 @end
 
 @implementation MXSegmentMenuVertical
@@ -33,7 +18,7 @@
     CGSize size = [self.selectedView.currentTitle sizeWithAttributes:@{NSFontAttributeName: self.selectedView.titleLabel.font}];
     switch (self.flagStyle) {
         case MXSegmentMenuFlagStyleBackground:
-            return size.height + 20;
+            return size.height + 20 + self.selectedView.currentImage.size.height;
             break;
         case MXSegmentMenuFlagStyleBottomLine:
             return self.selectedView.frame.size.height;
@@ -88,49 +73,23 @@
         X = CGRectGetMaxX(self.flagView.frame);
     }
     for (NSInteger i = 0; i < self.numberRows; i++) {
-        
         UIButton *item = [[UIButton alloc] init];
         [item addTarget:self action:@selector(clicked:) forControlEvents:UIControlEventTouchUpInside];
-        
         CGFloat itemH = normalH;
-        UIColor *normalColor = self.titleNormaColor;
-        UIColor *selectedColor = self.titleSelectedColor;
-        UIFont *font = self.titleNormaFont;
-        NSString *text = nil;
-        
         MXSegmentMenuAttributes attrbutes = [self.segmentDelegate itemAttrbuteWithSegmentMenu:self itemForIndex:i];
-        if (attrbutes[MXSegmentMenuAttributeTitleWidth]) {
-            itemH = [attrbutes[MXSegmentMenuAttributeTitleWidth] floatValue];
+        if (attrbutes[MXSegmentMenuContentImage]) {
+            [item setImage:attrbutes[MXSegmentMenuContentImage] forState:UIControlStateNormal];
         }
-        if (attrbutes[MXSegmentMenuAttributeTitleNormalFont]) {
-            font = attrbutes[MXSegmentMenuAttributeTitleNormalFont];
+        if (attrbutes[MXSegmentMenuContentSize]) {
+            itemH = [attrbutes[MXSegmentMenuContentSize] floatValue];
         }
-        if (attrbutes[MXSegmentMenuAttributeTitleNormalColor]) {
-            normalColor = attrbutes[MXSegmentMenuAttributeTitleNormalColor];
-        }
-        if (attrbutes[MXSegmentMenuAttributeTitleSelectedColor]) {
-            selectedColor = attrbutes[MXSegmentMenuAttributeTitleSelectedColor];
-        }
-        if (attrbutes[MXSegmentMenuAttributeNormalContentImage]) {
-            [item setImage:attrbutes[MXSegmentMenuAttributeNormalContentImage] forState:UIControlStateNormal];
-        }
-        if (attrbutes[MXSegmentMenuAttributeSelectContentImage]) {
-            [item setImage:attrbutes[MXSegmentMenuAttributeSelectContentImage] forState:UIControlStateSelected];
-        }
-        if (attrbutes[MXSegmentMenuAttributeBackguroundNormalImage]) {
-            [item setBackgroundImage:attrbutes[MXSegmentMenuAttributeBackguroundNormalImage] forState:UIControlStateNormal];
-        }
-        if (attrbutes[MXSegmentMenuAttributeBackguroundSelectedImage]) {
-            [item setBackgroundImage: attrbutes[MXSegmentMenuAttributeBackguroundSelectedImage] forState:UIControlStateSelected];
-        }
-        if (attrbutes[MXSegmentMenuAttributeTitleContentString]) {
-            text = attrbutes[MXSegmentMenuAttributeTitleContentString];
+        if (attrbutes[MXSegmentMenuContentString]) {
+            [item setTitle:attrbutes[MXSegmentMenuContentString] forState:UIControlStateNormal];
         }
         item.frame = CGRectMake(X, Y, W, itemH);
-        [item setTitle:text forState:UIControlStateNormal];
-        [item setTitleColor:selectedColor forState:UIControlStateSelected];
-        [item setTitleColor:normalColor forState:UIControlStateNormal];
-        item.titleLabel.font = font;
+        [item setTitleColor:self.selectedTitleColor forState:UIControlStateSelected];
+        [item setTitleColor:self.normalTitleColor forState:UIControlStateNormal];
+        item.titleLabel.font = self.normalFont;
         [self addSubview:item];
         item.tag = i + kBaseItemTag;
         Y = CGRectGetMaxY(item.frame);
