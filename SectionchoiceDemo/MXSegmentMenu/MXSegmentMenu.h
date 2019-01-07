@@ -72,21 +72,25 @@ typedef NS_ENUM(NSUInteger, MXSegmentMenuDirection) {
 @property (nonatomic, assign, readonly) MXSegmentMenuDirection direction;
 //选中标识符厚度
 @property (nonatomic, assign) CGFloat flagThickness;
-//
+//选中指示器
 @property (nonatomic, strong) UIView *flagView;
 //标题宽度
 @property (nonatomic, assign) CGFloat itemW;
-//
+//选中状态下背景颜色
 @property (nonatomic, strong) UIColor *selectedBackgroundColor;
-//
+//默认状态下背景颜色
 @property (nonatomic, strong) UIColor *normalBackgroundColor;
+//选中状态下的标题颜色
+@property (nonatomic, strong) UIColor *selectedTitleColor;
+//默认状态下的标题颜色
+@property (nonatomic, strong) UIColor *normalTitleColor;
 
 + (instancetype)segmentMenuWithFrame:(CGRect)frame direction:(MXSegmentMenuDirection)direction;
-// 刷新数据
+/** 刷新数据 */
 - (void)reLoadView;
-// 返回指定的Button
+/** 返回指定的Button */
 - (UIButton *)itemWithIndex:(NSInteger)index;
-// 集成给子类实现
+/** 集成给子类实现 */
 - (void)createTitles;
 @end
 
